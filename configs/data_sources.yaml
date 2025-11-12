@@ -1,0 +1,23 @@
+kiwoom:
+  base_url: https://openapi.kiwoom.com
+  endpoints:
+    authenticate: /oauth2/tokenP
+    refresh: /oauth2/refreshP
+    candles: /uapi/domestic-stock/v1/quotations/inquire-time-itemchartprice
+    supply: /uapi/domestic-stock/v1/quotations/inquire-investors
+    balance: /uapi/domestic-stock/v1/trading/inquire-balance
+    order: /uapi/domestic-stock/v1/trading/order-cash
+  default_headers:
+    tr_id: HHDFS00000300
+    content_type: application/json
+  timeframes:
+    - tick
+    - 1m
+    - 5m
+    - 15m
+    - 1h
+    - 6h
+market_indices:
+  - kospi
+  - kosdaq
+data_retention_days: 365

@@ -1,0 +1,17 @@
+position_limits:
+  max_notional_per_stock: 5000000
+  max_positions: 10
+drawdown:
+  intraday_pct: 3.0
+  daily_pct: 5.0
+cooldown:
+  order_seconds: 5
+  toggle_seconds: 30
+slippage:
+  default_bps: 7
+  emergency_bps: 15
+risk_checks:
+  - position_limits
+  - drawdown
+  - cooldown
+  - slippage

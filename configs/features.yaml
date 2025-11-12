@@ -1,0 +1,27 @@
+supervised:
+  targets:
+    - next_day_return
+  features:
+    price:
+      - close
+      - high
+      - low
+      - volume
+    technical:
+      - ema_5
+      - ema_20
+      - rsi_14
+      - atr_14
+    supply:
+      - foreign_acc
+      - institution_acc
+      - loan_balance_ratio
+    market:
+      - kospi_change
+      - kosdaq_change
+rl:
+  observation_window: 256
+  actions: [buy, sell, hold]
+  reward:
+    pnl_weight: 0.8
+    risk_weight: 0.2
