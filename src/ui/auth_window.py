@@ -3,15 +3,19 @@
 from __future__ import annotations
 
 import json
-from typing import Any, Dict, Optional
+import threading
+from typing import Any, Dict, List, Optional
 
+import yaml
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from src.api.kiwoom_client import KiwoomRESTClient
 from src.core.exceptions import ConfigurationError, KiwoomAPIError
 from src.core.logging_config import get_logger
 from src.core.settings import AppSettings, get_settings
+from src.data_pipeline.service import DataSyncConfig, DataSyncService
 from src.services.notifier import ConsoleNotifier
+from src.symbols.registry import SymbolRecord, SymbolRegistry
 
 
 class AuthWindow(QtWidgets.QWidget):
@@ -23,6 +27,10 @@ class AuthWindow(QtWidgets.QWidget):
         self.logger = get_logger("ui.auth")
         self.notifier = ConsoleNotifier(logger=self.logger)
         self.client: Optional[KiwoomRESTClient] = None
+        self.symbol_registry = SymbolRegistry()
+        self.watchlist_path = self.settings.paths.config_dir / "watchlist.yaml"
+        self.watchlist_data = self._load_watchlist_data()
+        self.watchlist_symbols: List[str] = self.watchlist_data.get("symbols", [])
 
         self.setWindowTitle("Kiwoom REST 인증")
         self.setMinimumWidth(720)
@@ -84,6 +92,8 @@ class AuthWindow(QtWidgets.QWidget):
         self.holdings_table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
         summary_layout.addWidget(self.holdings_table)
         layout.addWidget(summary_group)
+
+        layout.addWidget(self._build_symbol_ui())
 
         self.log_console = QtWidgets.QPlainTextEdit()
         self.log_console.setReadOnly(True)
@@ -295,6 +305,53 @@ class AuthWindow(QtWidgets.QWidget):
         self.cash_label.setText("예수금: - / 평가금액: - / 손익: -")
         self.holdings_table.setRowCount(0)
 
+    def _build_symbol_ui(self) -> QtWidgets.QGroupBox:
+        group = QtWidgets.QGroupBox("종목 검색 / 선택")
+        vbox = QtWidgets.QVBoxLayout(group)
+
+        search_layout = QtWidgets.QHBoxLayout()
+        self.symbol_search_input = QtWidgets.QLineEdit()
+        self.symbol_search_input.setPlaceholderText("종목코드 또는 종목명 입력")
+        search_layout.addWidget(self.symbol_search_input)
+        self.symbol_search_button = QtWidgets.QPushButton("검색")
+        self.symbol_search_button.clicked.connect(self.handle_symbol_search)
+        search_layout.addWidget(self.symbol_search_button)
+        vbox.addLayout(search_layout)
+
+        self.symbol_results = QtWidgets.QTableWidget(0, 4)
+        self.symbol_results.setHorizontalHeaderLabels(["종목코드", "종목명", "시장", "상장일"])
+        self.symbol_results.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+        self.symbol_results.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.symbol_results.setSelectionMode(QtWidgets.QAbstractItemView.MultiSelection)
+        vbox.addWidget(self.symbol_results)
+
+        button_layout = QtWidgets.QHBoxLayout()
+        self.add_watchlist_button = QtWidgets.QPushButton("관심종목 추가")
+        self.add_watchlist_button.clicked.connect(self.handle_add_to_watchlist)
+        button_layout.addWidget(self.add_watchlist_button)
+        self.remove_watchlist_button = QtWidgets.QPushButton("선택 삭제")
+        self.remove_watchlist_button.clicked.connect(self.handle_remove_from_watchlist)
+        button_layout.addWidget(self.remove_watchlist_button)
+        button_layout.addStretch(1)
+        vbox.addLayout(button_layout)
+
+        self.watchlist_view = QtWidgets.QListWidget()
+        self._render_watchlist()
+        vbox.addWidget(self.watchlist_view)
+
+        sync_layout = QtWidgets.QHBoxLayout()
+        self.timeframe_input = QtWidgets.QLineEdit(",".join(self.watchlist_data.get("default_timeframes", ["1m", "15m"])))
+        self.timeframe_input.setPlaceholderText("타임프레임 (쉼표 구분)")
+        sync_layout.addWidget(self.timeframe_input)
+        self.full_history_checkbox = QtWidgets.QCheckBox("상장일~현재 전체 수집")
+        sync_layout.addWidget(self.full_history_checkbox)
+        self.sync_button = QtWidgets.QPushButton("선택 종목 수집")
+        self.sync_button.clicked.connect(self.handle_sync_selected)
+        sync_layout.addWidget(self.sync_button)
+        vbox.addLayout(sync_layout)
+
+        return group
+
     def shutdown(self) -> None:
         if self.client:
             try:
@@ -307,3 +364,151 @@ class AuthWindow(QtWidgets.QWidget):
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:  # type: ignore[override]
         self.shutdown()
         super().closeEvent(event)
+
+    def handle_symbol_search(self) -> None:
+        keyword = self.symbol_search_input.text().strip()
+        if not keyword:
+            self._append_log("검색 키워드를 입력하세요.", error=True)
+            return
+        records = self.symbol_registry.search(keyword, limit=50)
+        if not records:
+            self._append_log(f"'{keyword}' 검색 결과가 없습니다.", error=False)
+        self._render_symbol_results(records)
+
+    def handle_add_to_watchlist(self) -> None:
+        selected = self.symbol_results.selectionModel().selectedRows()
+        if not selected:
+            self._append_log("추가할 종목을 선택하세요.", error=True)
+            return
+        added = []
+        for index in selected:
+            record: SymbolRecord = self.symbol_results.item(index.row(), 0).data(QtCore.Qt.UserRole)
+            if record.symbol not in self.watchlist_symbols:
+                self.watchlist_symbols.append(record.symbol)
+                added.append(record.symbol)
+        if added:
+            self._save_watchlist_data()
+            self._render_watchlist()
+            self._append_log(f"관심종목에 추가: {', '.join(added)}")
+
+    def handle_remove_from_watchlist(self) -> None:
+        selected_items = self.watchlist_view.selectedItems()
+        if not selected_items:
+            self._append_log("삭제할 종목을 선택하세요.", error=True)
+            return
+        removed = []
+        for item in selected_items:
+            symbol = item.data(QtCore.Qt.UserRole)
+            if symbol in self.watchlist_symbols:
+                self.watchlist_symbols.remove(symbol)
+                removed.append(symbol)
+        if removed:
+            self._save_watchlist_data()
+            self._render_watchlist()
+            self._append_log(f"관심종목에서 삭제: {', '.join(removed)}")
+
+    def handle_sync_selected(self) -> None:
+        if not self.token_ready:
+            self._append_log("먼저 토큰을 발급해 주세요.", error=True)
+            return
+
+        selected_items = self.watchlist_view.selectedItems()
+        symbols = [item.data(QtCore.Qt.UserRole) for item in selected_items] or self.watchlist_symbols
+        if not symbols:
+            self._append_log("동기화할 관심종목이 없습니다.", error=True)
+            return
+
+        timeframes = [tf.strip() for tf in self.timeframe_input.text().split(",") if tf.strip()]
+        if not timeframes:
+            self._append_log("타임프레임을 입력하세요.", error=True)
+            return
+
+        full_history = self.full_history_checkbox.isChecked()
+        self.sync_button.setEnabled(False)
+        self._append_log(f"데이터 수집 시작 (종목: {symbols}, 타임프레임: {timeframes}, full_history={full_history})")
+
+        def worker() -> None:
+            try:
+                service = DataSyncService(settings=self.settings, client=self.client)
+                summary = service.run(
+                    DataSyncConfig(
+                        symbols=symbols,
+                        timeframes=timeframes,
+                        candles_per_request=200,
+                        full_history=full_history,
+                    )
+                )
+                message = f"데이터 수집 완료: {len(summary['synced'])} 항목"
+                QtCore.QMetaObject.invokeMethod(
+                    self,
+                    "append_log_async",
+                    QtCore.Qt.QueuedConnection,
+                    QtCore.Q_ARG(str, message),
+                    QtCore.Q_ARG(bool, False),
+                )
+            except Exception as exc:  # pylint: disable=broad-except
+                QtCore.QMetaObject.invokeMethod(
+                    self,
+                    "append_log_async",
+                    QtCore.Qt.QueuedConnection,
+                    QtCore.Q_ARG(str, f"데이터 수집 실패: {exc}"),
+                    QtCore.Q_ARG(bool, True),
+                )
+            finally:
+                QtCore.QMetaObject.invokeMethod(
+                    self,
+                    "enable_sync_button",
+                    QtCore.Qt.QueuedConnection,
+                )
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    @QtCore.pyqtSlot()
+    def enable_sync_button(self) -> None:
+        self.sync_button.setEnabled(True)
+
+    @QtCore.pyqtSlot(str, bool)
+    def append_log_async(self, message: str, is_error: bool) -> None:
+        self._append_log(message, error=is_error)
+
+    def _render_symbol_results(self, records: List[SymbolRecord]) -> None:
+        self.symbol_results.setRowCount(len(records))
+        for row, record in enumerate(records):
+            symbol_item = QtWidgets.QTableWidgetItem(record.symbol)
+            symbol_item.setData(QtCore.Qt.UserRole, record)
+            symbol_item.setFlags(symbol_item.flags() ^ QtCore.Qt.ItemIsEditable)
+            self.symbol_results.setItem(row, 0, symbol_item)
+
+            name_item = QtWidgets.QTableWidgetItem(record.name)
+            name_item.setFlags(name_item.flags() ^ QtCore.Qt.ItemIsEditable)
+            self.symbol_results.setItem(row, 1, name_item)
+
+            market_item = QtWidgets.QTableWidgetItem(record.market)
+            market_item.setFlags(market_item.flags() ^ QtCore.Qt.ItemIsEditable)
+            self.symbol_results.setItem(row, 2, market_item)
+
+            listing_item = QtWidgets.QTableWidgetItem(record.listing_date.strftime("%Y-%m-%d"))
+            listing_item.setFlags(listing_item.flags() ^ QtCore.Qt.ItemIsEditable)
+            self.symbol_results.setItem(row, 3, listing_item)
+
+    def _load_watchlist_data(self) -> Dict[str, Any]:
+        self.watchlist_path.parent.mkdir(parents=True, exist_ok=True)
+        if self.watchlist_path.exists():
+            with self.watchlist_path.open("r", encoding="utf-8") as handle:
+                return yaml.safe_load(handle) or {"symbols": []}
+        default = {"symbols": [], "default_timeframes": ["1m", "15m", "1h"]}
+        with self.watchlist_path.open("w", encoding="utf-8") as handle:
+            yaml.safe_dump(default, handle, allow_unicode=True)
+        return default
+
+    def _save_watchlist_data(self) -> None:
+        self.watchlist_data["symbols"] = sorted(set(self.watchlist_symbols))
+        with self.watchlist_path.open("w", encoding="utf-8") as handle:
+            yaml.safe_dump(self.watchlist_data, handle, allow_unicode=True)
+
+    def _render_watchlist(self) -> None:
+        self.watchlist_view.clear()
+        for symbol in self.watchlist_symbols:
+            item = QtWidgets.QListWidgetItem(symbol)
+            item.setData(QtCore.Qt.UserRole, symbol)
+            self.watchlist_view.addItem(item)

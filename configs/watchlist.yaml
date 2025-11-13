@@ -1,0 +1,6 @@
+default_timeframes:
+- 1m
+- 15m
+- 1h
+symbols:
+- 005930

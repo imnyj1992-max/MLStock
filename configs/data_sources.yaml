@@ -10,9 +10,11 @@ kiwoom:
     account_overview: /api/dostk/acnt
     order: /uapi/domestic-stock/v1/trading/order-cash
     logout: /oauth2/revoke
+    market_condition: /api/dostk/mrkcond
   default_headers:
     Content-Type: application/json;charset=UTF-8
-    tr_id: HHDFS00000300
+  account_overview_api_id: kt00004
+  market_condition_api_id: ka10005
   timeframes:
     - tick
     - 1m
@@ -20,7 +22,6 @@ kiwoom:
     - 15m
     - 1h
     - 6h
-  account_overview_api_id: kt00004
 market_indices:
   - kospi
   - kosdaq

@@ -197,3 +197,305 @@
   ],
   "next_key": ""
 }
+2025-11-13 15:11:14,076 |     INFO | mlstock.ui.auth | Revoked Kiwoom REST token
+2025-11-13 15:14:08,100 |     INFO | mlstock.ui.auth | Kiwoom REST 인증 요청 중...
+2025-11-13 15:14:08,156 |     INFO | mlstock.ui.auth | Authenticated with Kiwoom REST API
+2025-11-13 15:14:08,158 |     INFO | mlstock.ui.auth | 토큰 발급 성공: kLvHIv*** (만료: 2025-11-14T12:57:19.156487+00:00)
+2025-11-13 15:14:09,056 |     INFO | mlstock.ui.auth | 계좌 정보 조회 중...
+2025-11-13 15:14:09,080 |     INFO | mlstock.ui.auth | Fetching account overview
+2025-11-13 15:14:09,084 |     INFO | mlstock.ui.auth | 계좌 정보:
+{
+  "output1": [],
+  "output2": [],
+  "raw_pages": [
+    {
+      "acnt_nm": "",
+      "brch_nm": "",
+      "entr": "000010000000",
+      "d2_entra": "000010000000",
+      "tot_est_amt": "000000000000",
+      "aset_evlt_amt": "000010000000",
+      "tot_pur_amt": "000000000000",
+      "prsm_dpst_aset_amt": "000010000000",
+      "tot_grnt_sella": "000000000000",
+      "tdy_lspft_amt": "000000000000",
+      "invt_bsamt": "000000000000",
+      "lspft_amt": "000000000000",
+      "tdy_lspft": "000000000000",
+      "lspft2": "000000000000",
+      "lspft": "000000000000",
+      "tdy_lspft_rt": "0.00",
+      "lspft_ratio": "0.00",
+      "lspft_rt": "0.00",
+      "stk_acnt_evlt_prst": [],
+      "return_code": 0,
+      "return_msg": "모의투자 해당조회내역이 없습니다."
+    }
+  ],
+  "next_key": ""
+}
+2025-11-13 15:14:27,297 |     INFO | mlstock.ui.auth | Revoked Kiwoom REST token
+2025-11-13 15:26:31,892 |  WARNING | mlstock.symbols.registry | Symbol CSV not found at G:\내 드라이브\개인 자료\python\MLStock\MLStock\data\symbols\symbols.csv. Creating a placeholder.
+2025-11-13 15:26:46,289 |     INFO | mlstock.ui.auth | 관심종목에 추가: 005930
+2025-11-13 15:26:57,935 |     INFO | mlstock.ui.auth | Kiwoom REST 인증 요청 중...
+2025-11-13 15:26:57,995 |     INFO | mlstock.ui.auth | Authenticated with Kiwoom REST API
+2025-11-13 15:26:57,998 |     INFO | mlstock.ui.auth | 토큰 발급 성공: kLvHIv*** (만료: 2025-11-14T12:57:19.995604+00:00)
+2025-11-13 15:26:59,145 |     INFO | mlstock.ui.auth | 계좌 정보 조회 중...
+2025-11-13 15:26:59,165 |     INFO | mlstock.ui.auth | Fetching account overview
+2025-11-13 15:26:59,168 |     INFO | mlstock.ui.auth | 계좌 정보:
+{
+  "output1": [],
+  "output2": [],
+  "raw_pages": [
+    {
+      "acnt_nm": "",
+      "brch_nm": "",
+      "entr": "000010000000",
+      "d2_entra": "000010000000",
+      "tot_est_amt": "000000000000",
+      "aset_evlt_amt": "000010000000",
+      "tot_pur_amt": "000000000000",
+      "prsm_dpst_aset_amt": "000010000000",
+      "tot_grnt_sella": "000000000000",
+      "tdy_lspft_amt": "000000000000",
+      "invt_bsamt": "000000000000",
+      "lspft_amt": "000000000000",
+      "tdy_lspft": "000000000000",
+      "lspft2": "000000000000",
+      "lspft": "000000000000",
+      "tdy_lspft_rt": "0.00",
+      "lspft_ratio": "0.00",
+      "lspft_rt": "0.00",
+      "stk_acnt_evlt_prst": [],
+      "return_code": 0,
+      "return_msg": "모의투자 해당조회내역이 없습니다."
+    }
+  ],
+  "next_key": ""
+}
+2025-11-13 15:26:59,287 |     INFO | mlstock.ui.auth | 계좌 정보 조회 중...
+2025-11-13 15:26:59,822 |     INFO | mlstock.ui.auth | Fetching account overview
+2025-11-13 15:26:59,823 |     INFO | mlstock.ui.auth | 계좌 정보:
+{
+  "output1": [],
+  "output2": [],
+  "raw_pages": [
+    {
+      "acnt_nm": "",
+      "brch_nm": "",
+      "entr": "000010000000",
+      "d2_entra": "000010000000",
+      "tot_est_amt": "000000000000",
+      "aset_evlt_amt": "000010000000",
+      "tot_pur_amt": "000000000000",
+      "prsm_dpst_aset_amt": "000010000000",
+      "tot_grnt_sella": "000000000000",
+      "tdy_lspft_amt": "000000000000",
+      "invt_bsamt": "000000000000",
+      "lspft_amt": "000000000000",
+      "tdy_lspft": "000000000000",
+      "lspft2": "000000000000",
+      "lspft": "000000000000",
+      "tdy_lspft_rt": "0.00",
+      "lspft_ratio": "0.00",
+      "lspft_rt": "0.00",
+      "stk_acnt_evlt_prst": [],
+      "return_code": 0,
+      "return_msg": "모의투자 해당조회내역이 없습니다."
+    }
+  ],
+  "next_key": ""
+}
+2025-11-13 15:27:10,398 |     INFO | mlstock.ui.auth | 데이터 수집 시작 (종목: ['005930'], 타임프레임: ['1m', '15m', '1h'], full_history=True)
+2025-11-13 15:27:10,412 |     INFO | mlstock.data_sync | Sync start
+2025-11-13 15:27:10,414 |     INFO | mlstock.CandleCollector | Collecting full history
+2025-11-13 15:29:50,974 |     INFO | mlstock.ui.auth | Kiwoom REST 인증 요청 중...
+2025-11-13 15:29:51,027 |     INFO | mlstock.ui.auth | Authenticated with Kiwoom REST API
+2025-11-13 15:29:51,031 |     INFO | mlstock.ui.auth | 토큰 발급 성공: kLvHIv*** (만료: 2025-11-14T12:57:19.027907+00:00)
+2025-11-13 15:29:51,946 |     INFO | mlstock.ui.auth | 계좌 정보 조회 중...
+2025-11-13 15:29:51,966 |     INFO | mlstock.ui.auth | Fetching account overview
+2025-11-13 15:29:51,969 |     INFO | mlstock.ui.auth | 계좌 정보:
+{
+  "output1": [],
+  "output2": [],
+  "raw_pages": [
+    {
+      "acnt_nm": "",
+      "brch_nm": "",
+      "entr": "000010000000",
+      "d2_entra": "000010000000",
+      "tot_est_amt": "000000000000",
+      "aset_evlt_amt": "000010000000",
+      "tot_pur_amt": "000000000000",
+      "prsm_dpst_aset_amt": "000010000000",
+      "tot_grnt_sella": "000000000000",
+      "tdy_lspft_amt": "000000000000",
+      "invt_bsamt": "000000000000",
+      "lspft_amt": "000000000000",
+      "tdy_lspft": "000000000000",
+      "lspft2": "000000000000",
+      "lspft": "000000000000",
+      "tdy_lspft_rt": "0.00",
+      "lspft_ratio": "0.00",
+      "lspft_rt": "0.00",
+      "stk_acnt_evlt_prst": [],
+      "return_code": 0,
+      "return_msg": "모의투자 해당조회내역이 없습니다."
+    }
+  ],
+  "next_key": ""
+}
+2025-11-13 15:30:19,470 |     INFO | mlstock.ui.auth | '큐알티' 검색 결과가 없습니다.
+2025-11-13 15:30:38,818 |     INFO | mlstock.ui.auth | '에코프로비엠' 검색 결과가 없습니다.
+2025-11-13 15:30:54,332 |     INFO | mlstock.ui.auth | '신한' 검색 결과가 없습니다.
+2025-11-13 15:31:05,872 |     INFO | mlstock.ui.auth | '현대' 검색 결과가 없습니다.
+2025-11-13 15:31:24,018 |     INFO | mlstock.ui.auth | 데이터 수집 시작 (종목: ['005930'], 타임프레임: ['1m', '15m', '1h'], full_history=True)
+2025-11-13 15:31:24,029 |     INFO | mlstock.data_sync | Sync start
+2025-11-13 15:31:24,030 |     INFO | mlstock.CandleCollector | Collecting full history
+2025-11-13 15:31:24,071 |    ERROR | mlstock.ui.auth | Kiwoom API error 500: {"date":"2025-11-13T06:31:25.697+0000","error":"INTERNAL_SERVER_ERROR","status":500,"message":"예기치 못한 에러가 발생하였습니다"}
+2025-11-13 15:31:24,074 |    ERROR | mlstock.ui.auth | Kiwoom API error | {"status": 500, "body": "{\"date\":\"2025-11-13T06:31:25.697+0000\",\"error\":\"INTERNAL_SERVER_ERROR\",\"status\":500,\"message\":\"예기치 못한 에러가 발생하였습니다\"}"}
+2025-11-13 15:31:24,594 |    ERROR | mlstock.ui.auth | Kiwoom API error 500: {"date":"2025-11-13T06:31:26.218+0000","error":"INTERNAL_SERVER_ERROR","status":500,"message":"예기치 못한 에러가 발생하였습니다"}
+2025-11-13 15:31:24,595 |    ERROR | mlstock.ui.auth | Kiwoom API error | {"status": 500, "body": "{\"date\":\"2025-11-13T06:31:26.218+0000\",\"error\":\"INTERNAL_SERVER_ERROR\",\"status\":500,\"message\":\"예기치 못한 에러가 발생하였습니다\"}"}
+2025-11-13 15:31:25,608 |    ERROR | mlstock.ui.auth | Kiwoom API error 500: {"date":"2025-11-13T06:31:27.236+0000","error":"INTERNAL_SERVER_ERROR","status":500,"message":"예기치 못한 에러가 발생하였습니다"}
+2025-11-13 15:31:25,609 |    ERROR | mlstock.ui.auth | Kiwoom API error | {"status": 500, "body": "{\"date\":\"2025-11-13T06:31:27.236+0000\",\"error\":\"INTERNAL_SERVER_ERROR\",\"status\":500,\"message\":\"예기치 못한 에러가 발생하였습니다\"}"}
+2025-11-13 15:31:25,611 |    ERROR | mlstock.ui.auth | 데이터 수집 실패: RetryError[<Future at 0x1fd09e8d290 state=finished raised TypeError>]
+2025-11-13 15:32:49,620 |     INFO | mlstock.ui.auth | Kiwoom REST 인증 요청 중...
+2025-11-13 15:32:49,681 |     INFO | mlstock.ui.auth | Authenticated with Kiwoom REST API
+2025-11-13 15:32:49,683 |     INFO | mlstock.ui.auth | 토큰 발급 성공: kLvHIv*** (만료: 2025-11-14T12:57:19.681519+00:00)
+2025-11-13 15:32:50,222 |     INFO | mlstock.ui.auth | 계좌 정보 조회 중...
+2025-11-13 15:32:50,241 |     INFO | mlstock.ui.auth | Fetching account overview
+2025-11-13 15:32:50,245 |     INFO | mlstock.ui.auth | 계좌 정보:
+{
+  "output1": [],
+  "output2": [],
+  "raw_pages": [
+    {
+      "acnt_nm": "",
+      "brch_nm": "",
+      "entr": "000010000000",
+      "d2_entra": "000010000000",
+      "tot_est_amt": "000000000000",
+      "aset_evlt_amt": "000010000000",
+      "tot_pur_amt": "000000000000",
+      "prsm_dpst_aset_amt": "000010000000",
+      "tot_grnt_sella": "000000000000",
+      "tdy_lspft_amt": "000000000000",
+      "invt_bsamt": "000000000000",
+      "lspft_amt": "000000000000",
+      "tdy_lspft": "000000000000",
+      "lspft2": "000000000000",
+      "lspft": "000000000000",
+      "tdy_lspft_rt": "0.00",
+      "lspft_ratio": "0.00",
+      "lspft_rt": "0.00",
+      "stk_acnt_evlt_prst": [],
+      "return_code": 0,
+      "return_msg": "모의투자 해당조회내역이 없습니다."
+    }
+  ],
+  "next_key": ""
+}
+2025-11-13 15:32:53,600 |     INFO | mlstock.ui.auth | 데이터 수집 시작 (종목: ['005930'], 타임프레임: ['1m', '15m', '1h'], full_history=True)
+2025-11-13 15:32:53,610 |     INFO | mlstock.data_sync | Sync start
+2025-11-13 15:32:53,612 |     INFO | mlstock.CandleCollector | Collecting full history
+2025-11-13 15:32:53,624 |    ERROR | mlstock.ui.auth | Kiwoom API error 500: {"date":"2025-11-13T06:32:55.256+0000","error":"INTERNAL_SERVER_ERROR","status":500,"message":"예기치 못한 에러가 발생하였습니다"}
+2025-11-13 15:32:53,625 |    ERROR | mlstock.ui.auth | Kiwoom API error | {"status": 500, "body": "{\"date\":\"2025-11-13T06:32:55.256+0000\",\"error\":\"INTERNAL_SERVER_ERROR\",\"status\":500,\"message\":\"예기치 못한 에러가 발생하였습니다\"}"}
+2025-11-13 15:32:54,138 |    ERROR | mlstock.ui.auth | Kiwoom API error 500: {"date":"2025-11-13T06:32:55.769+0000","error":"INTERNAL_SERVER_ERROR","status":500,"message":"예기치 못한 에러가 발생하였습니다"}
+2025-11-13 15:32:54,139 |    ERROR | mlstock.ui.auth | Kiwoom API error | {"status": 500, "body": "{\"date\":\"2025-11-13T06:32:55.769+0000\",\"error\":\"INTERNAL_SERVER_ERROR\",\"status\":500,\"message\":\"예기치 못한 에러가 발생하였습니다\"}"}
+2025-11-13 15:32:55,158 |    ERROR | mlstock.ui.auth | Kiwoom API error 500: {"date":"2025-11-13T06:32:56.788+0000","error":"INTERNAL_SERVER_ERROR","status":500,"message":"예기치 못한 에러가 발생하였습니다"}
+2025-11-13 15:32:55,160 |    ERROR | mlstock.ui.auth | Kiwoom API error | {"status": 500, "body": "{\"date\":\"2025-11-13T06:32:56.788+0000\",\"error\":\"INTERNAL_SERVER_ERROR\",\"status\":500,\"message\":\"예기치 못한 에러가 발생하였습니다\"}"}
+2025-11-13 15:32:55,163 |    ERROR | mlstock.ui.auth | 데이터 수집 실패: RetryError[<Future at 0x1eeeaa9bc90 state=finished raised TypeError>]
+2025-11-13 15:41:51,253 |     INFO | mlstock.ui.auth | Kiwoom REST 인증 요청 중...
+2025-11-13 15:41:51,352 |     INFO | mlstock.ui.auth | Authenticated with Kiwoom REST API
+2025-11-13 15:41:51,356 |     INFO | mlstock.ui.auth | 토큰 발급 성공: kLvHIv*** (만료: 2025-11-14T12:57:19.352321+00:00)
+2025-11-13 15:41:52,222 |     INFO | mlstock.ui.auth | 계좌 정보 조회 중...
+2025-11-13 15:41:52,245 |     INFO | mlstock.ui.auth | Fetching account overview
+2025-11-13 15:41:52,248 |     INFO | mlstock.ui.auth | 계좌 정보:
+{
+  "output1": [],
+  "output2": [],
+  "raw_pages": [
+    {
+      "acnt_nm": "",
+      "brch_nm": "",
+      "entr": "000010000000",
+      "d2_entra": "000010000000",
+      "tot_est_amt": "000000000000",
+      "aset_evlt_amt": "000010000000",
+      "tot_pur_amt": "000000000000",
+      "prsm_dpst_aset_amt": "000010000000",
+      "tot_grnt_sella": "000000000000",
+      "tdy_lspft_amt": "000000000000",
+      "invt_bsamt": "000000000000",
+      "lspft_amt": "000000000000",
+      "tdy_lspft": "000000000000",
+      "lspft2": "000000000000",
+      "lspft": "000000000000",
+      "tdy_lspft_rt": "0.00",
+      "lspft_ratio": "0.00",
+      "lspft_rt": "0.00",
+      "stk_acnt_evlt_prst": [],
+      "return_code": 0,
+      "return_msg": "모의투자 해당조회내역이 없습니다."
+    }
+  ],
+  "next_key": ""
+}
+2025-11-13 15:41:56,297 |     INFO | mlstock.ui.auth | 데이터 수집 시작 (종목: ['005930'], 타임프레임: ['1m', '15m', '1h'], full_history=True)
+2025-11-13 15:41:56,306 |     INFO | mlstock.data_sync | Sync start
+2025-11-13 15:41:56,307 |     INFO | mlstock.CandleCollector | Collecting full history
+2025-11-13 15:41:56,323 |    ERROR | mlstock.ui.auth | Kiwoom API error 500: {"date":"2025-11-13T06:41:57.980+0000","error":"INTERNAL_SERVER_ERROR","status":500,"message":"예기치 못한 에러가 발생하였습니다"}
+2025-11-13 15:41:56,324 |    ERROR | mlstock.ui.auth | Kiwoom API error | {"status": 500, "body": "{\"date\":\"2025-11-13T06:41:57.980+0000\",\"error\":\"INTERNAL_SERVER_ERROR\",\"status\":500,\"message\":\"예기치 못한 에러가 발생하였습니다\"}"}
+2025-11-13 15:41:56,841 |    ERROR | mlstock.ui.auth | Kiwoom API error 500: {"date":"2025-11-13T06:41:58.495+0000","error":"INTERNAL_SERVER_ERROR","status":500,"message":"예기치 못한 에러가 발생하였습니다"}
+2025-11-13 15:41:56,842 |    ERROR | mlstock.ui.auth | Kiwoom API error | {"status": 500, "body": "{\"date\":\"2025-11-13T06:41:58.495+0000\",\"error\":\"INTERNAL_SERVER_ERROR\",\"status\":500,\"message\":\"예기치 못한 에러가 발생하였습니다\"}"}
+2025-11-13 15:41:57,856 |    ERROR | mlstock.ui.auth | Kiwoom API error 500: {"date":"2025-11-13T06:41:59.511+0000","error":"INTERNAL_SERVER_ERROR","status":500,"message":"예기치 못한 에러가 발생하였습니다"}
+2025-11-13 15:41:57,857 |    ERROR | mlstock.ui.auth | Kiwoom API error | {"status": 500, "body": "{\"date\":\"2025-11-13T06:41:59.511+0000\",\"error\":\"INTERNAL_SERVER_ERROR\",\"status\":500,\"message\":\"예기치 못한 에러가 발생하였습니다\"}"}
+2025-11-13 15:41:57,859 |    ERROR | mlstock.ui.auth | 데이터 수집 실패: RetryError[<Future at 0x2e21dced750 state=finished raised TypeError>]
+2025-11-13 15:42:01,864 |     INFO | mlstock.ui.auth | Revoked Kiwoom REST token
+2025-11-13 15:47:26,928 |     INFO | mlstock.ui.auth | Kiwoom REST 인증 요청 중...
+2025-11-13 15:47:26,985 |     INFO | mlstock.ui.auth | Authenticated with Kiwoom REST API
+2025-11-13 15:47:26,988 |     INFO | mlstock.ui.auth | 토큰 발급 성공: kLvHIv*** (만료: 2025-11-14T12:57:19.985991+00:00)
+2025-11-13 15:47:27,738 |     INFO | mlstock.ui.auth | 계좌 정보 조회 중...
+2025-11-13 15:47:27,757 |     INFO | mlstock.ui.auth | Fetching account overview
+2025-11-13 15:47:27,760 |     INFO | mlstock.ui.auth | 계좌 정보:
+{
+  "output1": [],
+  "output2": [],
+  "raw_pages": [
+    {
+      "acnt_nm": "",
+      "brch_nm": "",
+      "entr": "000010000000",
+      "d2_entra": "000010000000",
+      "tot_est_amt": "000000000000",
+      "aset_evlt_amt": "000010000000",
+      "tot_pur_amt": "000000000000",
+      "prsm_dpst_aset_amt": "000010000000",
+      "tot_grnt_sella": "000000000000",
+      "tdy_lspft_amt": "000000000000",
+      "invt_bsamt": "000000000000",
+      "lspft_amt": "000000000000",
+      "tdy_lspft": "000000000000",
+      "lspft2": "000000000000",
+      "lspft": "000000000000",
+      "tdy_lspft_rt": "0.00",
+      "lspft_ratio": "0.00",
+      "lspft_rt": "0.00",
+      "stk_acnt_evlt_prst": [],
+      "return_code": 0,
+      "return_msg": "모의투자 해당조회내역이 없습니다."
+    }
+  ],
+  "next_key": ""
+}
+2025-11-13 15:47:32,185 |     INFO | mlstock.ui.auth | 데이터 수집 시작 (종목: ['005930'], 타임프레임: ['1m', '15m', '1h'], full_history=True)
+2025-11-13 15:47:32,197 |     INFO | mlstock.data_sync | Sync start
+2025-11-13 15:47:32,198 |     INFO | mlstock.CandleCollector | Collecting full history
+2025-11-13 15:47:32,211 |    ERROR | mlstock.ui.auth | Kiwoom API error 500: {"date":"2025-11-13T06:47:33.881+0000","error":"INTERNAL_SERVER_ERROR","status":500,"message":"예기치 못한 에러가 발생하였습니다"}
+2025-11-13 15:47:32,212 |    ERROR | mlstock.ui.auth | Kiwoom API error | {"status": 500, "body": "{\"date\":\"2025-11-13T06:47:33.881+0000\",\"error\":\"INTERNAL_SERVER_ERROR\",\"status\":500,\"message\":\"예기치 못한 에러가 발생하였습니다\"}"}
+2025-11-13 15:47:32,725 |    ERROR | mlstock.ui.auth | Kiwoom API error 500: {"date":"2025-11-13T06:47:34.396+0000","error":"INTERNAL_SERVER_ERROR","status":500,"message":"예기치 못한 에러가 발생하였습니다"}
+2025-11-13 15:47:32,726 |    ERROR | mlstock.ui.auth | Kiwoom API error | {"status": 500, "body": "{\"date\":\"2025-11-13T06:47:34.396+0000\",\"error\":\"INTERNAL_SERVER_ERROR\",\"status\":500,\"message\":\"예기치 못한 에러가 발생하였습니다\"}"}
+2025-11-13 15:47:33,740 |    ERROR | mlstock.ui.auth | Kiwoom API error 500: {"date":"2025-11-13T06:47:35.410+0000","error":"INTERNAL_SERVER_ERROR","status":500,"message":"예기치 못한 에러가 발생하였습니다"}
+2025-11-13 15:47:33,741 |    ERROR | mlstock.ui.auth | Kiwoom API error | {"status": 500, "body": "{\"date\":\"2025-11-13T06:47:35.410+0000\",\"error\":\"INTERNAL_SERVER_ERROR\",\"status\":500,\"message\":\"예기치 못한 에러가 발생하였습니다\"}"}
+2025-11-13 15:47:33,742 |    ERROR | mlstock.ui.auth | 데이터 수집 실패: RetryError[<Future at 0x204ec614090 state=finished raised TypeError>]
+2025-11-13 15:47:37,419 |     INFO | mlstock.ui.auth | Revoked Kiwoom REST token

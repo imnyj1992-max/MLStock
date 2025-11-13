@@ -245,11 +245,69 @@ class KiwoomRESTClient:
             return digits[:8], digits[8:].rjust(2, "0")
         return digits[:8], digits[8:10]
 
-    def get_candles(self, symbol: str, timeframe: str, count: int = 200) -> Dict[str, Any]:
-        """Fetch candle data for a symbol."""
+    def get_candles(
+        self,
+        symbol: str,
+        timeframe: str,
+        count: int = 200,
+        *,
+        cont_yn: str = "N",
+        next_key: str = "",
+    ) -> tuple[Dict[str, Any], requests.structures.CaseInsensitiveDict[str]]:
+        """Fetch candle data for a symbol, supporting pagination headers."""
         endpoint = self.endpoints.get("candles")
-        params = {"fid_cond_mrkt_div_code": "J", "fid_input_iscd": symbol, "fid_input_hour_1": timeframe, "count": count}
-        return self._request("GET", endpoint, params=params)
+        tf_code, tr_id = self._resolve_timeframe(timeframe)
+        params = {"fid_cond_mrkt_div_code": "J", "fid_input_iscd": symbol, "count": count}
+        if tf_code:
+            params["fid_input_hour_1"] = tf_code
+        headers = {"tr_id": tr_id}
+        if cont_yn == "Y" or next_key:
+            headers["cont-yn"] = cont_yn
+            if next_key:
+                headers["next-key"] = next_key
+        return self._request_with_headers("GET", endpoint, params=params, headers=headers)
+
+    def get_market_condition(
+        self,
+        *,
+        symbol: str,
+        payload: Optional[Dict[str, Any]] = None,
+        cont_yn: str = "N",
+        next_key: str = "",
+    ) -> tuple[Dict[str, Any], requests.structures.CaseInsensitiveDict[str]]:
+        endpoint = self.endpoints.get("market_condition")
+        if not endpoint:
+            raise ConfigurationError("market_condition endpoint missing in data_sources.yaml")
+        api_id = self.settings.kiwoom.get("market_condition_api_id", "ka10005")
+        body = payload.copy() if payload else {"stk_cd": symbol}
+        headers = {"api-id": api_id}
+        if cont_yn == "Y" or next_key:
+            headers["cont-yn"] = cont_yn
+            if next_key:
+                headers["next-key"] = next_key
+        return self._request_with_headers("POST", endpoint, json_payload=body, headers=headers)
+
+    @staticmethod
+    def _resolve_timeframe(timeframe: str) -> tuple[Optional[str], str]:
+        tf = timeframe.lower()
+        minute_map = {
+            "1m": "1",
+            "3m": "3",
+            "5m": "5",
+            "10m": "10",
+            "15m": "15",
+            "30m": "30",
+            "60m": "60",
+            "1h": "60",
+            "2h": "120",
+            "4h": "240",
+            "6h": "360",
+        }
+        if tf in ("tick", "t"):
+            return None, "FHKST03010200"
+        if tf in minute_map:
+            return minute_map[tf], "FHKST03010200"
+        return None, "HHDFS00000300"
 
     def get_supply_data(self, symbol: str) -> Dict[str, Any]:
         """Fetch investor supply data."""
