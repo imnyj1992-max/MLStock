@@ -16,6 +16,7 @@ def bootstrap() -> None:
     app = QtWidgets.QApplication(sys.argv)
     window = AuthWindow()
     window.show()
+    app.aboutToQuit.connect(window.shutdown)
     sys.exit(app.exec())
 
 

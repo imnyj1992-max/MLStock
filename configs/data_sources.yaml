@@ -7,8 +7,9 @@ kiwoom:
     candles: /uapi/domestic-stock/v1/quotations/inquire-time-itemchartprice
     supply: /uapi/domestic-stock/v1/quotations/inquire-investors
     balance: /uapi/domestic-stock/v1/trading/inquire-balance
-    account_overview: /uapi/domestic-stock/v1/trading/inquire-balance
+    account_overview: /api/dostk/acnt
     order: /uapi/domestic-stock/v1/trading/order-cash
+    logout: /oauth2/revoke
   default_headers:
     Content-Type: application/json;charset=UTF-8
     tr_id: HHDFS00000300
@@ -19,6 +20,7 @@ kiwoom:
     - 15m
     - 1h
     - 6h
+  account_overview_api_id: kt00004
 market_indices:
   - kospi
   - kosdaq

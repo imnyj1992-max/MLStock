@@ -36,6 +36,7 @@ class KiwoomRESTClient:
         self.session = requests.Session()
         self._access_token: Optional[str] = None
         self._token_expiry: Optional[datetime] = None
+        self._closed = False
 
         kiwoom_cfg = self.settings.kiwoom
         self.base_url: str = self._resolve_base_url(kiwoom_cfg)
@@ -166,7 +167,6 @@ class KiwoomRESTClient:
             headers.update(extra)
         return headers
 
-    @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=0.5, min=0.5, max=4))
     def _request(
         self,
         method: str,
@@ -177,6 +177,27 @@ class KiwoomRESTClient:
         headers: Optional[Dict[str, str]] = None,
         include_auth: bool = True,
     ) -> Dict[str, Any]:
+        body, _ = self._request_with_headers(
+            method,
+            endpoint,
+            params=params,
+            json_payload=json_payload,
+            headers=headers,
+            include_auth=include_auth,
+        )
+        return body
+
+    @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=0.5, min=0.5, max=4))
+    def _request_with_headers(
+        self,
+        method: str,
+        endpoint: str,
+        *,
+        params: Optional[Dict[str, Any]] = None,
+        json_payload: Optional[Dict[str, Any]] = None,
+        headers: Optional[Dict[str, str]] = None,
+        include_auth: bool = True,
+    ) -> tuple[Dict[str, Any], requests.structures.CaseInsensitiveDict[str]]:
         if not endpoint:
             raise ConfigurationError("Endpoint path is required.")
 
@@ -207,12 +228,12 @@ class KiwoomRESTClient:
                 level=NotificationLevel.ERROR,
                 payload={"status": response.status_code, "body": response.text},
             )
-            raise KiwoomAPIError(message)
+            raise KiwoomAPIError(message, status_code=response.status_code, payload=response.text)
 
         try:
-            return response.json()
+            return response.json(), response.headers
         except ValueError as exc:
-            raise KiwoomAPIError("Failed to parse JSON response") from exc
+            raise KiwoomAPIError("Failed to parse JSON response", payload=response.text) from exc
 
     def _split_account(self) -> tuple[str, str]:
         digits = "".join(ch for ch in self.settings.credentials.account_no if ch.isdigit())
@@ -267,22 +288,62 @@ class KiwoomRESTClient:
         self.logger.info("Order submitted", extra={"symbol": symbol, "side": side, "qty": quantity})
         return response
 
-    def get_account_overview(self) -> Dict[str, Any]:
-        """Retrieve account balance/overview after authentication."""
+    def get_account_overview(self, *, qry_type: str = "0", market: str = "KRX") -> Dict[str, Any]:
+        """Retrieve account evaluation overview with pagination support."""
         endpoint = self.endpoints.get("account_overview") or self.endpoints.get("balance")
         if not endpoint:
             raise ConfigurationError("account_overview endpoint missing.")
+
         cano, product_code = self._split_account()
-        params = {
-            "CANO": cano,
-            "ACNT_PRDT_CD": product_code,
-            "AFHR_FLPR_YN": "N",
-            "INQR_DVSN": "01",
-            "UNPR_DVSN": "01",
+        api_id = self.settings.kiwoom.get("account_overview_api_id", "kt00004")
+        cont_flag = "N"
+        next_key = ""
+        aggregated_holdings: list[Dict[str, Any]] = []
+        summaries: list[Dict[str, Any]] = []
+        raw_pages: list[Dict[str, Any]] = []
+
+        for _ in range(50):  # safety guard
+            payload = {
+                "cano": cano,
+                "acnt_prdt_cd": product_code,
+                "qry_tp": qry_type,
+                "dmst_stex_tp": market,
+            }
+            headers = {"api-id": api_id, "cont-yn": cont_flag, "next-key": next_key}
+            body, resp_headers = self._request_with_headers(
+                "POST",
+                endpoint,
+                json_payload=payload,
+                headers=headers,
+            )
+            raw_pages.append(body)
+
+            holdings = body.get("output1") or body.get("output") or body.get("stk_acnt_evlt_prst") or []
+            summary = body.get("output2") or body.get("summary") or []
+
+            if isinstance(holdings, list):
+                aggregated_holdings.extend(holdings)
+
+            if isinstance(summary, list):
+                summaries.extend(summary)
+            elif summary:
+                summaries.append(summary)
+
+            cont_header = (resp_headers.get("cont-yn") or resp_headers.get("Cont-Yn") or "N").upper()
+            next_key = resp_headers.get("next-key") or resp_headers.get("Next-Key") or ""
+            if cont_header != "Y" or not next_key:
+                break
+            cont_flag = "Y"
+        else:
+            self.logger.warning("Account overview pagination limit reached")
+
+        self.logger.info("Fetching account overview", extra={"account": f"{cano}-{product_code}", "pages": len(raw_pages)})
+        return {
+            "output1": aggregated_holdings,
+            "output2": summaries,
+            "raw_pages": raw_pages,
+            "next_key": next_key,
         }
-        headers = {"tr_id": "TTTC8434R"}
-        self.logger.info("Fetching account overview", extra={"account": f"{cano}-{product_code}"})
-        return self._request("GET", endpoint, params=params, headers=headers)
 
     @staticmethod
     def _resolve_expiry(body: Dict[str, Any]) -> int:
@@ -303,3 +364,37 @@ class KiwoomRESTClient:
                 pass
 
         return 3600
+
+    def revoke_token(self) -> None:
+        """Invalidate the current access token if Kiwoom provides a logout endpoint."""
+        if not self._access_token:
+            return
+
+        endpoint = self.endpoints.get("logout")
+        if endpoint:
+            try:
+                self.session.post(
+                    urljoin(self.base_url, endpoint),
+                    headers={"Authorization": f"Bearer {self._access_token}", "Content-Type": "application/json"},
+                    timeout=self.settings.rest_timeout,
+                )
+                self.logger.info("Revoked Kiwoom REST token")
+            except requests.RequestException as exc:
+                self.logger.warning("Failed to revoke token: %s", exc)
+
+        self._access_token = None
+        self._token_expiry = None
+
+    def close(self) -> None:
+        """Revoke token and close HTTP session."""
+        if self._closed:
+            return
+        self.revoke_token()
+        self.session.close()
+        self._closed = True
+
+    def __del__(self) -> None:
+        try:
+            self.close()
+        except Exception:  # pragma: no cover
+            pass
