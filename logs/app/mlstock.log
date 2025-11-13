@@ -1,0 +1,50 @@
+2025-11-13 12:57:18,766 |     INFO | mlstock.ui.auth | Kiwoom REST 인증 요청 중...
+2025-11-13 12:57:18,894 |    ERROR | mlstock.ui.auth | 토큰 발급 실패: Invalid authentication response: {'expires_dt': '20251114125720', 'return_msg': '정상적으로 처리되었습니다', 'token_type': 'Bearer', 'return_code': 0, 'token': 'kLvHIvEgeHRO14mZPsnMSg8U_1tuRAnb7EcNocu0P1nEJbEFHa8fw7DdMy1GnrJZ_vjn-Kss5PDRLSLEbPJCzg'}
+2025-11-13 12:57:36,196 |     INFO | mlstock.ui.auth | Kiwoom REST 인증 요청 중...
+2025-11-13 12:57:36,247 |    ERROR | mlstock.ui.auth | 토큰 발급 실패: Invalid authentication response: {'expires_dt': '20251114125720', 'return_msg': '정상적으로 처리되었습니다', 'token_type': 'Bearer', 'return_code': 0, 'token': 'kLvHIvEgeHRO14mZPsnMSg8U_1tuRAnb7EcNocu0P1nEJbEFHa8fw7DdMy1GnrJZ_vjn-Kss5PDRLSLEbPJCzg'}
+2025-11-13 13:02:33,277 |     INFO | mlstock.ui.auth | Kiwoom REST 인증 요청 중...
+2025-11-13 13:02:33,354 |     INFO | mlstock.ui.auth | Authenticated with Kiwoom REST API
+2025-11-13 13:02:33,356 |     INFO | mlstock.ui.auth | 토큰 발급 성공: kLvHIv*** (만료: 2025-11-14T12:57:19.354451+00:00)
+2025-11-13 13:02:38,167 |     INFO | mlstock.ui.auth | Kiwoom REST 인증 요청 중...
+2025-11-13 13:02:38,224 |     INFO | mlstock.ui.auth | Authenticated with Kiwoom REST API
+2025-11-13 13:02:38,225 |     INFO | mlstock.ui.auth | 토큰 발급 성공: kLvHIv*** (만료: 2025-11-14T12:57:19.224842+00:00)
+2025-11-13 13:02:39,834 |     INFO | mlstock.ui.auth | 계좌 정보 조회 중...
+2025-11-13 13:02:39,839 |    ERROR | mlstock.ui.auth | 계좌 조회 실패: ACCOUNT_NO must include at least 10 digits (e.g., 12345678-01).
+2025-11-13 13:02:42,255 |     INFO | mlstock.ui.auth | Kiwoom REST 인증 요청 중...
+2025-11-13 13:02:42,300 |     INFO | mlstock.ui.auth | Authenticated with Kiwoom REST API
+2025-11-13 13:02:42,302 |     INFO | mlstock.ui.auth | 토큰 발급 성공: kLvHIv*** (만료: 2025-11-14T12:57:19.300126+00:00)
+2025-11-13 13:06:16,504 |     INFO | mlstock.ui.auth | Kiwoom REST 인증 요청 중...
+2025-11-13 13:06:16,587 |     INFO | mlstock.ui.auth | Authenticated with Kiwoom REST API
+2025-11-13 13:06:16,589 |     INFO | mlstock.ui.auth | 토큰 발급 성공: kLvHIv*** (만료: 2025-11-14T12:57:19.587067+00:00)
+2025-11-13 13:06:30,987 |     INFO | mlstock.ui.auth | Kiwoom REST 인증 요청 중...
+2025-11-13 13:06:31,039 |     INFO | mlstock.ui.auth | Authenticated with Kiwoom REST API
+2025-11-13 13:06:31,042 |     INFO | mlstock.ui.auth | 토큰 발급 성공: kLvHIv*** (만료: 2025-11-14T12:57:19.039968+00:00)
+2025-11-13 13:17:34,790 |     INFO | mlstock.ui.auth | Kiwoom REST 인증 요청 중...
+2025-11-13 13:17:34,873 |     INFO | mlstock.ui.auth | Authenticated with Kiwoom REST API
+2025-11-13 13:17:34,876 |     INFO | mlstock.ui.auth | 토큰 발급 성공: kLvHIv*** (만료: 2025-11-14T12:57:19.873573+00:00)
+2025-11-13 13:17:37,850 |     INFO | mlstock.ui.auth | 계좌 정보 조회 중...
+2025-11-13 13:17:37,855 |    ERROR | mlstock.ui.auth | 계좌 조회 실패: ACCOUNT_NO must include at least 10 digits (e.g., 12345678-01).
+2025-11-13 13:21:03,407 |     INFO | mlstock.ui.auth | Kiwoom REST 인증 요청 중...
+2025-11-13 13:21:03,472 |     INFO | mlstock.ui.auth | Authenticated with Kiwoom REST API
+2025-11-13 13:21:03,474 |     INFO | mlstock.ui.auth | 토큰 발급 성공: kLvHIv*** (만료: 2025-11-14T12:57:19.472481+00:00)
+2025-11-13 13:21:05,182 |     INFO | mlstock.ui.auth | 계좌 정보 조회 중...
+2025-11-13 13:21:05,185 |     INFO | mlstock.ui.auth | Fetching account overview
+2025-11-13 13:21:05,199 |    ERROR | mlstock.ui.auth | Kiwoom API error 500: {"date":"2025-11-13T04:21:06.473+0000","error":"INTERNAL_SERVER_ERROR","status":500,"message":"예기치 못한 에러가 발생하였습니다"}
+2025-11-13 13:21:05,201 |    ERROR | mlstock.ui.auth | Kiwoom API error | {"status": 500, "body": "{\"date\":\"2025-11-13T04:21:06.473+0000\",\"error\":\"INTERNAL_SERVER_ERROR\",\"status\":500,\"message\":\"예기치 못한 에러가 발생하였습니다\"}"}
+2025-11-13 13:21:05,714 |    ERROR | mlstock.ui.auth | Kiwoom API error 500: {"date":"2025-11-13T04:21:06.988+0000","error":"INTERNAL_SERVER_ERROR","status":500,"message":"예기치 못한 에러가 발생하였습니다"}
+2025-11-13 13:21:05,717 |    ERROR | mlstock.ui.auth | Kiwoom API error | {"status": 500, "body": "{\"date\":\"2025-11-13T04:21:06.988+0000\",\"error\":\"INTERNAL_SERVER_ERROR\",\"status\":500,\"message\":\"예기치 못한 에러가 발생하였습니다\"}"}
+2025-11-13 13:21:06,736 |    ERROR | mlstock.ui.auth | Kiwoom API error 500: {"date":"2025-11-13T04:21:08.010+0000","error":"INTERNAL_SERVER_ERROR","status":500,"message":"예기치 못한 에러가 발생하였습니다"}
+2025-11-13 13:21:06,737 |    ERROR | mlstock.ui.auth | Kiwoom API error | {"status": 500, "body": "{\"date\":\"2025-11-13T04:21:08.010+0000\",\"error\":\"INTERNAL_SERVER_ERROR\",\"status\":500,\"message\":\"예기치 못한 에러가 발생하였습니다\"}"}
+2025-11-13 13:21:06,739 |    ERROR | mlstock.ui.auth | 계좌 조회 실패: RetryError[<Future at 0x2139a773150 state=finished raised KiwoomAPIError>]
+2025-11-13 13:27:26,059 |     INFO | mlstock.ui.auth | Kiwoom REST 인증 요청 중...
+2025-11-13 13:27:26,173 |     INFO | mlstock.ui.auth | Authenticated with Kiwoom REST API
+2025-11-13 13:27:26,175 |     INFO | mlstock.ui.auth | 토큰 발급 성공: kLvHIv*** (만료: 2025-11-14T12:57:19.173416+00:00)
+2025-11-13 13:27:27,665 |     INFO | mlstock.ui.auth | 계좌 정보 조회 중...
+2025-11-13 13:27:27,669 |     INFO | mlstock.ui.auth | Fetching account overview
+2025-11-13 13:27:27,686 |    ERROR | mlstock.ui.auth | Kiwoom API error 500: {"date":"2025-11-13T04:27:28.978+0000","error":"INTERNAL_SERVER_ERROR","status":500,"message":"예기치 못한 에러가 발생하였습니다"}
+2025-11-13 13:27:27,688 |    ERROR | mlstock.ui.auth | Kiwoom API error | {"status": 500, "body": "{\"date\":\"2025-11-13T04:27:28.978+0000\",\"error\":\"INTERNAL_SERVER_ERROR\",\"status\":500,\"message\":\"예기치 못한 에러가 발생하였습니다\"}"}
+2025-11-13 13:27:28,206 |    ERROR | mlstock.ui.auth | Kiwoom API error 500: {"date":"2025-11-13T04:27:29.498+0000","error":"INTERNAL_SERVER_ERROR","status":500,"message":"예기치 못한 에러가 발생하였습니다"}
+2025-11-13 13:27:28,207 |    ERROR | mlstock.ui.auth | Kiwoom API error | {"status": 500, "body": "{\"date\":\"2025-11-13T04:27:29.498+0000\",\"error\":\"INTERNAL_SERVER_ERROR\",\"status\":500,\"message\":\"예기치 못한 에러가 발생하였습니다\"}"}
+2025-11-13 13:27:29,225 |    ERROR | mlstock.ui.auth | Kiwoom API error 500: {"date":"2025-11-13T04:27:30.517+0000","error":"INTERNAL_SERVER_ERROR","status":500,"message":"예기치 못한 에러가 발생하였습니다"}
+2025-11-13 13:27:29,226 |    ERROR | mlstock.ui.auth | Kiwoom API error | {"status": 500, "body": "{\"date\":\"2025-11-13T04:27:30.517+0000\",\"error\":\"INTERNAL_SERVER_ERROR\",\"status\":500,\"message\":\"예기치 못한 에러가 발생하였습니다\"}"}
+2025-11-13 13:27:29,227 |    ERROR | mlstock.ui.auth | 계좌 조회 실패: RetryError[<Future at 0x1c4c63e24d0 state=finished raised KiwoomAPIError>]

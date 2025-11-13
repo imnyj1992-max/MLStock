@@ -96,14 +96,21 @@ class KiwoomRESTClient:
             self.logger.error("Authentication request failed: %s", exc)
             raise AuthenticationError("Kiwoom authentication failed") from exc
 
-        access_token = body.get("access_token")
-        expires_in = body.get("expires_in", 3600)
+        access_token = body.get("access_token") or body.get("token")
         if not access_token:
+            return_code = str(body.get("return_code"))
+            if return_code and return_code != "0":
+                raise AuthenticationError(body.get("return_msg") or f"Authentication failed: {body}")
             raise AuthenticationError(f"Invalid authentication response: {body}")
+
+        expires_in = self._resolve_expiry(body)
 
         self._access_token = access_token
         self._token_expiry = datetime.now(timezone.utc) + timedelta(seconds=expires_in)
-        self.logger.info("Authenticated with Kiwoom REST API")
+        self.logger.info(
+            "Authenticated with Kiwoom REST API",
+            extra={"token_type": body.get("token_type"), "expires_in": expires_in},
+        )
         return access_token
 
     def _normalize_headers(self, headers: Dict[str, Any]) -> Dict[str, Any]:
@@ -208,10 +215,14 @@ class KiwoomRESTClient:
             raise KiwoomAPIError("Failed to parse JSON response") from exc
 
     def _split_account(self) -> tuple[str, str]:
-        account = "".join(ch for ch in self.settings.credentials.account_no if ch.isdigit())
-        if len(account) < 10:
-            raise ConfigurationError("ACCOUNT_NO must include at least 10 digits (e.g., 12345678-01).")
-        return account[:8], account[8:10]
+        digits = "".join(ch for ch in self.settings.credentials.account_no if ch.isdigit())
+        if len(digits) < 8:
+            raise ConfigurationError("ACCOUNT_NO must include at least 8 digits (e.g., 12345678-01).")
+        if len(digits) == 8:
+            return digits, "01"
+        if len(digits) == 9:
+            return digits[:8], digits[8:].rjust(2, "0")
+        return digits[:8], digits[8:10]
 
     def get_candles(self, symbol: str, timeframe: str, count: int = 200) -> Dict[str, Any]:
         """Fetch candle data for a symbol."""
@@ -272,3 +283,23 @@ class KiwoomRESTClient:
         headers = {"tr_id": "TTTC8434R"}
         self.logger.info("Fetching account overview", extra={"account": f"{cano}-{product_code}"})
         return self._request("GET", endpoint, params=params, headers=headers)
+
+    @staticmethod
+    def _resolve_expiry(body: Dict[str, Any]) -> int:
+        """Determine token expiration seconds from multiple Kiwoom response formats."""
+        expires_in = body.get("expires_in")
+        if isinstance(expires_in, (int, float)):
+            return int(expires_in)
+        if isinstance(expires_in, str) and expires_in.isdigit():
+            return int(expires_in)
+
+        expires_dt = body.get("expires_dt")
+        if expires_dt:
+            try:
+                expiry = datetime.strptime(expires_dt, "%Y%m%d%H%M%S").replace(tzinfo=timezone.utc)
+                delta = expiry - datetime.now(timezone.utc)
+                return max(int(delta.total_seconds()), 0)
+            except ValueError:
+                pass
+
+        return 3600
