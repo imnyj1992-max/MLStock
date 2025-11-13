@@ -1,0 +1,16 @@
+2025-11-13 11:13:47,556 |     INFO | mlstock | Starting MLStock Phase 0 bootstrap
+2025-11-13 11:13:47,558 |    ERROR | mlstock | Failed to initialize Kiwoom client: Kiwoom base_url is missing in data_sources.yaml
+2025-11-13 11:14:09,800 |     INFO | mlstock | Starting MLStock Phase 0 bootstrap
+2025-11-13 11:14:09,803 |    ERROR | mlstock | Failed to initialize Kiwoom client: Kiwoom base_url is missing in data_sources.yaml
+2025-11-13 11:14:50,192 |     INFO | mlstock | Starting MLStock Phase 0 bootstrap
+2025-11-13 11:14:50,194 |    ERROR | mlstock | Failed to initialize Kiwoom client: Kiwoom base_url is missing in data_sources.yaml
+2025-11-13 11:15:01,048 |     INFO | mlstock | Starting MLStock Phase 0 bootstrap
+2025-11-13 11:15:01,052 |    ERROR | mlstock | Failed to initialize Kiwoom client: Kiwoom base_url is missing in data_sources.yaml
+2025-11-13 11:16:07,717 |     INFO | mlstock | Starting MLStock Phase 0 bootstrap
+2025-11-13 11:16:07,719 |    ERROR | mlstock | Failed to initialize Kiwoom client: Kiwoom base_url is missing in data_sources.yaml
+2025-11-13 11:22:53,289 |     INFO | mlstock | Starting MLStock Phase 0 bootstrap
+2025-11-13 11:22:53,291 |    ERROR | mlstock | Failed to initialize Kiwoom client: Kiwoom base_url is missing in data_sources.yaml
+2025-11-13 11:26:16,555 |     INFO | mlstock | Starting MLStock Phase 0 bootstrap
+2025-11-13 11:26:16,557 |    ERROR | mlstock | Failed to initialize Kiwoom client: Kiwoom base_url is missing in data_sources.yaml
+2025-11-13 11:26:34,715 |     INFO | mlstock | Starting MLStock Phase 0 bootstrap
+2025-11-13 11:26:34,717 |    ERROR | mlstock | Failed to initialize Kiwoom client: Kiwoom base_url is missing in data_sources.yaml

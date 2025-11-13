@@ -38,12 +38,26 @@ class KiwoomRESTClient:
         self._token_expiry: Optional[datetime] = None
 
         kiwoom_cfg = self.settings.kiwoom
-        self.base_url: str = kiwoom_cfg.get("base_url", "")
+        self.base_url: str = self._resolve_base_url(kiwoom_cfg)
         self.endpoints: Dict[str, str] = kiwoom_cfg.get("endpoints", {})
-        self.default_headers: Dict[str, Any] = kiwoom_cfg.get("default_headers", {})
+        self.default_headers: Dict[str, Any] = self._normalize_headers(kiwoom_cfg.get("default_headers", {}))
 
         if not self.base_url:
             raise ConfigurationError("Kiwoom base_url is missing in data_sources.yaml")
+
+    @property
+    def token_expiry(self) -> Optional[datetime]:
+        """Expose current token expiry (read-only)."""
+        return self._token_expiry
+
+    def update_credentials(self, *, app_sky: str, sec_key: str, account_no: str) -> None:
+        """Update credentials at runtime (e.g., from GUI input)."""
+        self.settings.credentials.app_sky = app_sky.strip()
+        self.settings.credentials.sec_key = sec_key.strip()
+        self.settings.credentials.account_no = account_no.strip()
+        # Force token refresh on next request.
+        self._access_token = None
+        self._token_expiry = None
 
     def authenticate(self, force: bool = False) -> str:
         """Authenticate and cache access token."""
@@ -64,14 +78,16 @@ class KiwoomRESTClient:
             raise ConfigurationError("authenticate endpoint missing in config.")
 
         payload = {
+            "grant_type": "client_credentials",
             "appkey": creds.app_sky,
-            "appsecret": creds.sec_key,
+            "secretkey": creds.sec_key,
         }
 
         try:
             response = self.session.post(
                 urljoin(self.base_url, endpoint),
                 json=payload,
+                headers={"Content-Type": "application/json;charset=UTF-8"},
                 timeout=self.settings.rest_timeout,
             )
             response.raise_for_status()
@@ -90,10 +106,53 @@ class KiwoomRESTClient:
         self.logger.info("Authenticated with Kiwoom REST API")
         return access_token
 
+    def _normalize_headers(self, headers: Dict[str, Any]) -> Dict[str, Any]:
+        """Normalize header keys for consistency."""
+        normalized: Dict[str, Any] = {}
+        headers = headers or {}
+        for key, value in headers.items():
+            if not key:
+                continue
+            header_key = key.strip()
+            lower = header_key.lower()
+            if lower in {"content_type", "content-type"}:
+                header_key = "Content-Type"
+            normalized[header_key] = value
+
+        normalized.setdefault("Content-Type", "application/json;charset=UTF-8")
+        return normalized
+
+    def _resolve_base_url(self, config: Dict[str, Any]) -> str:
+        """Resolve base URL considering paper/live hosts and legacy fields."""
+
+        env_key = "live" if self.settings.is_live else "paper"
+
+        def pick(value: Any) -> Optional[str]:
+            if isinstance(value, dict):
+                return value.get(env_key) or value.get("paper") or value.get("live")
+            if isinstance(value, str):
+                return value
+            return None
+
+        candidates = [
+            pick(config.get("base_url")),
+            pick(config.get("hosts")),
+        ]
+        base_config = config.get("base_url")
+        if isinstance(base_config, str):
+            candidates.append(base_config)
+
+        for url in candidates:
+            if url:
+                return url
+
+        # Hard-coded fallback to ensure GUI can boot even if config is missing.
+        return "https://api.kiwoom.com" if self.settings.is_live else "https://mockapi.kiwoom.com"
+
     def _build_headers(self, extra: Optional[Dict[str, str]] = None) -> Dict[str, str]:
         headers = {
             "Authorization": f"Bearer {self.authenticate()}",
-            "Content-Type": "application/json",
+            "Content-Type": "application/json;charset=UTF-8",
         }
         headers.update(self.default_headers)
         if extra:
@@ -148,6 +207,12 @@ class KiwoomRESTClient:
         except ValueError as exc:
             raise KiwoomAPIError("Failed to parse JSON response") from exc
 
+    def _split_account(self) -> tuple[str, str]:
+        account = "".join(ch for ch in self.settings.credentials.account_no if ch.isdigit())
+        if len(account) < 10:
+            raise ConfigurationError("ACCOUNT_NO must include at least 10 digits (e.g., 12345678-01).")
+        return account[:8], account[8:10]
+
     def get_candles(self, symbol: str, timeframe: str, count: int = 200) -> Dict[str, Any]:
         """Fetch candle data for a symbol."""
         endpoint = self.endpoints.get("candles")
@@ -177,10 +242,7 @@ class KiwoomRESTClient:
     ) -> Dict[str, Any]:
         """Submit an order via the Kiwoom REST endpoint."""
         endpoint = self.endpoints.get("order")
-        account = "".join(ch for ch in self.settings.credentials.account_no if ch.isdigit())
-        if len(account) < 10:
-            raise ConfigurationError("ACCOUNT_NO must include at least 10 digits (e.g., 12345678-01).")
-        cano, product_code = account[:8], account[8:10]
+        cano, product_code = self._split_account()
         payload = {
             "CANO": cano,
             "ACNT_PRDT_CD": product_code,
@@ -193,3 +255,20 @@ class KiwoomRESTClient:
         response = self._request("POST", endpoint, json_payload=payload)
         self.logger.info("Order submitted", extra={"symbol": symbol, "side": side, "qty": quantity})
         return response
+
+    def get_account_overview(self) -> Dict[str, Any]:
+        """Retrieve account balance/overview after authentication."""
+        endpoint = self.endpoints.get("account_overview") or self.endpoints.get("balance")
+        if not endpoint:
+            raise ConfigurationError("account_overview endpoint missing.")
+        cano, product_code = self._split_account()
+        params = {
+            "CANO": cano,
+            "ACNT_PRDT_CD": product_code,
+            "AFHR_FLPR_YN": "N",
+            "INQR_DVSN": "01",
+            "UNPR_DVSN": "01",
+        }
+        headers = {"tr_id": "TTTC8434R"}
+        self.logger.info("Fetching account overview", extra={"account": f"{cano}-{product_code}"})
+        return self._request("GET", endpoint, params=params, headers=headers)

@@ -28,12 +28,16 @@ class Credentials(BaseModel):
         }
 
 
+def _project_root() -> Path:
+    return Path(__file__).resolve().parents[2]
+
+
 class PathSettings(BaseModel):
     """Common filesystem locations."""
 
-    root: Path = Field(default_factory=lambda: Path(__file__).resolve().parents[1])
-    config_dir: Path = Field(default_factory=lambda: Path(__file__).resolve().parents[1] / "configs")
-    log_dir: Path = Field(default_factory=lambda: Path(__file__).resolve().parents[1] / "logs" / "app")
+    root: Path = Field(default_factory=_project_root)
+    config_dir: Path = Field(default_factory=lambda: _project_root() / "configs")
+    log_dir: Path = Field(default_factory=lambda: _project_root() / "logs" / "app")
 
 
 class AppSettings(BaseModel):
